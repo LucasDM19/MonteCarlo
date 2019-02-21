@@ -6,19 +6,18 @@ but now we want to see some longer-term outcomes, so first let's do that.
 '''
 
 import random
+import matplotlib
+import matplotlib.pyplot as plt
 
 # let us go ahead and change this to return a simple win/loss
 def rollDice():
     roll = random.randint(1,100)
 
     if roll == 100:
-        #print( roll,'roll was 100, you lose. What are the odds?! Play again!')
         return False
     elif roll <= 50:
-        #print( roll,'roll was 1-50, you lose.')
         return False
     elif 100 > roll >= 50:
-        #print( roll,'roll was 51-99, you win! *pretty lights flash* (play more!)')
         return True
 
 def simpleDiceRoller():
@@ -36,21 +35,44 @@ def simple_bettor(funds,initial_wager,wager_count):
     value = funds
     wager = initial_wager
 
-    currentWager = 0
+    # wager X
+    wX = []
 
-    while currentWager < wager_count:
+    #value Y
+    vY = []
+
+    # change to 1, to avoid confusion so we start @ wager 1
+    # instead of wager 0 and end at 100. 
+    currentWager = 1
+
+    #           change this to, less or equal.
+    while currentWager <= wager_count:
         if rollDice():
             value += wager
+            # append #
+            wX.append(currentWager)
+            vY.append(value)
+            
         else:
             value -= wager
+            # append #
+            wX.append(currentWager)
+            vY.append(value)
 
         currentWager += 1
+        
         print( 'Funds:', value )
-
+    plt.plot(wX,vY)
 
 # lots of wagers now....
 x = 0
 
+# start this off @ 1, then add, and increase 50 to 500, then 1000
 while x < 100:
-   simple_bettor(10000,100,100)      
-   x += 1
+    simple_bettor(funds=10000,initial_wager=100,wager_count=100000)
+    x += 1
+
+
+plt.ylabel('Account Value')
+plt.xlabel('Wager Count')
+plt.show()
