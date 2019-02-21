@@ -11,6 +11,12 @@ import matplotlib.pyplot as plt
 #
 import time
 
+sampleSize = 100
+
+startingFunds = 10000
+wagerSize = 100
+wagerCount = 1000
+
 # let us go ahead and change this to return a simple win/loss
 def rollDice():
     roll = random.randint(1,100)
@@ -33,10 +39,9 @@ def simpleDiceRoller():
 '''
 Simple bettor, betting the same amount each time.
 '''
-def simple_bettor(funds,initial_wager,wager_count):
+def simple_bettor(funds,initial_wager,wager_count,color):
     ####
-    global broke_count
-    
+
     value = funds
     wager = initial_wager
     wX = []
@@ -55,12 +60,13 @@ def simple_bettor(funds,initial_wager,wager_count):
             ###add me
             if value < 0:
                 currentWager += 10000000000000000
-                broke_count += 1
         currentWager += 1
-    plt.plot(wX,vY)
+
+    # this guy goes green #
+    plt.plot(wX,vY,color)
 
 def doubler_bettor(funds,initial_wager,wager_count):
-    global broke_count
+
     value = funds
     wager = initial_wager
     wX = []
@@ -82,7 +88,6 @@ def doubler_bettor(funds,initial_wager,wager_count):
                 wX.append(currentWager)
                 vY.append(value)
                 if value < 0:
-                    broke_count += 1
                     currentWager += 10000000000000000
         elif previousWager == 'loss':
             if rollDice():
@@ -101,19 +106,19 @@ def doubler_bettor(funds,initial_wager,wager_count):
                 vY.append(value)
                 if value < 0:
                     currentWager += 10000000000000000
-                    broke_count += 1
 
         currentWager += 1
-
-    plt.plot(wX,vY)
+    # this guy goes cyan #
+    plt.plot(wX,vY,'c')
     
 x = 0
-broke_count = 0
-while x < 1000:             
-    simple_bettor(10000,100,1000)
+
+while x < sampleSize:             
+    simple_bettor(startingFunds,wagerSize,wagerCount,'k')
+    simple_bettor(startingFunds,wagerSize*2,wagerCount,'c')
+    #doubler_bettor(startingFunds,wagerSize,wagerCount)
     x+=1
-print(('death rate:',(broke_count/float(x)) * 100))
-print(('survival rate:',100 - ((broke_count/float(x)) * 100)))
+
 plt.axhline(0, color = 'r')
 plt.ylabel('Account Value')
 plt.xlabel('Wager Count')
