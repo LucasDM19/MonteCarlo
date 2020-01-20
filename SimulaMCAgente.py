@@ -13,7 +13,7 @@ class MeioAmbiente():
       [self._afogados.append(agente) for agente in self._agentes if agente.estouVivo() == False]   # Quem se afogou sai
       self._agentes =  [agente for agente in self._agentes if agente.estouVivo() == True]    # Sobreviventes
       if(len([agente.patrimonio for agente in self._agentes]) != 0): melhor_patrimonio = max([agente.patrimonio for agente in self._agentes])
-      melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
+      if(len([agente.lucro_medio for agente in self._agentes]) != 0): melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
       #melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.patrimonio == melhor_patrimonio] )
       melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
       #if( self._geracoes % 500 == 0 ): print("Geracao#", self._geracoes, " Vivos:", len(self._agentes), ", afogados=", len(self._afogados), ", Champs=", melhorAgente )
@@ -23,7 +23,8 @@ class MeioAmbiente():
       #[agente.novaCorrida() for agente in self._agentes]
       if(len([agente.lucro_medio for agente in self._agentes]) != 0): melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
       melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
-      print("Sorteio#", self._corridas, " Vivos:", len(self._agentes), ", afogados=", len(self._afogados), ", Champs=", melhorAgente )
+      if( self._corridas >= 0 ):
+         print("Sorteio#", self._corridas, " Vivos:", len(self._agentes), ", afogados=", len(self._afogados), ", Champs=", melhorAgente )
       self._corridas += 1
       
    def __str__ (self):
@@ -64,7 +65,7 @@ class AgenteApostadorMegaSena():
       VALOR_APOSTA = 4.50
       PREMIO_SENA = 3000000 
       PREMIO_QUINA = PREMIO_SENA/100
-      PREMIO_QUADRA = 5000 #PREMIO_QUINA / 50
+      PREMIO_QUADRA = 440 # O premio costuma sempre ser dividido. Entre 460 e 1200 para cada.
       premios = {6 : PREMIO_SENA, 5 : PREMIO_QUINA, 4 : PREMIO_QUADRA,  }
       if( self.min_aposta < self.idade ): # Jovem demais para apostar
          sorted_freq_numeros = dict( sorted(self.freq_numeros.items(), key=operator.itemgetter(1),reverse=True))
