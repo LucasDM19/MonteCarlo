@@ -13,9 +13,9 @@ class MeioAmbiente():
       [self._afogados.append(agente) for agente in self._agentes if agente.estouVivo() == False]   # Quem se afogou sai
       self._agentes =  [agente for agente in self._agentes if agente.estouVivo() == True]    # Sobreviventes
       if(len([agente.patrimonio for agente in self._agentes]) != 0): melhor_patrimonio = max([agente.patrimonio for agente in self._agentes])
-      #melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
-      melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.patrimonio == melhor_patrimonio] )
-      #melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
+      melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
+      #melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.patrimonio == melhor_patrimonio] )
+      melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
       #if( self._geracoes % 500 == 0 ): print("Geracao#", self._geracoes, " Vivos:", len(self._agentes), ", afogados=", len(self._afogados), ", Champs=", melhorAgente )
       self._geracoes += 1
       
@@ -103,7 +103,7 @@ class AgenteApostadorMegaSena():
       return False
       
    def __str__ (self):
-      return "Nome="+self.nome+", espero="+str(self.min_aposta)+", Grana="+str(round(self.patrimonio,2))
+      return "Nome="+self.nome+", espero="+str(self.min_aposta)+", Grana="+str(round(self.patrimonio,2)) + ", PI="+ str(round(self.PAT_INICIAL,2))
       
 if( __name__ == '__main__' ):
    print("Rodo pela linha de comando!")
