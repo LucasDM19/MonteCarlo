@@ -15,7 +15,10 @@ n_sorteio = 0 # Sorteio da semana
 anterior = [] # Sorteio anterior
 sair = False
 #for semana in range(QTD_SEMANAS):
-mundo = MeioAmbiente(tipo_agente=AgenteApostadorMegaSena, qtd_agentes=50)   # Crio mundo
+mundo = MeioAmbiente(tipo_agente=AgenteApostadorMegaSena, qtd_agentes=100)   # Crio mundo
+benchmark = AgenteApostadorMegaSena()
+benchmark.defineAtributos(nome="YPSJD0NBCI", min_aposta=31899) # Bizarro
+mundo._agentes.append( benchmark )
 while( not sair ):
    random.shuffle(bolinhas_sena)   # Embaralha as bolinhas
    sorteioMegaSena = bolinhas_sena[0:QTD_SORTEIO]   # Sao 6 numeros 
@@ -33,6 +36,6 @@ while( not sair ):
       print("Todos morreram! Sorteio#", n_sorteio)
       sair = True
    n_sorteio += 1
-   anterior = sorteioMegaSena
+   #anterior = sorteioMegaSena
    #if( n_sorteio % 1000 == 0 ): print("Sorteio#", n_sorteio)
 

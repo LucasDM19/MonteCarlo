@@ -12,16 +12,16 @@ class MeioAmbiente():
       [agente.decide(numeros) for agente in self._agentes]
       [self._afogados.append(agente) for agente in self._agentes if agente.estouVivo() == False]   # Quem se afogou sai
       self._agentes =  [agente for agente in self._agentes if agente.estouVivo() == True]    # Sobreviventes
-      #melhor_patrimonio = max([agente.patrimonio for agente in self._agentes])
-      melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
-      #melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.patrimonio == melhor_patrimonio] )
-      melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
+      if(len([agente.patrimonio for agente in self._agentes]) != 0): melhor_patrimonio = max([agente.patrimonio for agente in self._agentes])
+      #melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
+      melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.patrimonio == melhor_patrimonio] )
+      #melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
       #if( self._geracoes % 500 == 0 ): print("Geracao#", self._geracoes, " Vivos:", len(self._agentes), ", afogados=", len(self._afogados), ", Champs=", melhorAgente )
       self._geracoes += 1
       
    def notificaNovoSorteio(self):
       #[agente.novaCorrida() for agente in self._agentes]
-      melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
+      if(len([agente.lucro_medio for agente in self._agentes]) != 0): melhor_retorno = max([agente.lucro_medio for agente in self._agentes])
       melhorAgente = "<>".join( [str(agente) for agente in self._agentes if agente.lucro_medio == melhor_retorno] )
       print("Sorteio#", self._corridas, " Vivos:", len(self._agentes), ", afogados=", len(self._afogados), ", Champs=", melhorAgente )
       self._corridas += 1
@@ -41,13 +41,20 @@ class AgenteApostadorMegaSena():
       self.iniciaMindset()
       
    def iniciaMindset(self):
+      self.PAT_INICIAL = random.uniform(100.0, 9000.0)
       self.nome = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))   # Uma cadeia de letras e numeros de tamanho 10
-      self.patrimonio = 100.0   # Mil doletas
+      self.patrimonio = self.PAT_INICIAL   # Mil doletas
       self.somaStack = 0.0 # Capital de giro
       self.lucro_medio = 0.0 # Retorno do investimento
       self.min_aposta = random.randrange(1000, 100000) # Quanto contabiliza antes de comecar a apostar
       self.freq_numeros = {} # Numeros quentes, mornos e frios
+      self.qtd_apostado = 0
+      self.qtd_vitorias = 0
       self.idade = 0 # Um bebezito
+      
+   def defineAtributos(self, nome, min_aposta):
+      self.nome = nome
+      self.min_aposta = min_aposta
       
    def estouVivo(self):
       if( self.patrimonio <= 0 ): return False
@@ -78,17 +85,21 @@ class AgenteApostadorMegaSena():
          n_aposta3 = numeros_frios[-3:] # Os mais frios dos mais frios
          aposta = n_aposta1 + n_aposta2 + n_aposta3
          n_acertei = [x for x in numeros for y in aposta if x==y]
+         self.qtd_apostado += 1
          if( len(n_acertei) >=4 ):
-            print("Ganhou!", self.nome, ", Sorteio#", self.idade, ", saldo=", self.patrimonio, ", acertei=", n_acertei)
+            #print("Ganhou!", self.nome, ", Sorteio#", self.idade, ", saldo=", self.patrimonio, ", acertei=", n_acertei, ", rat=", str(round(100.0*(self.qtd_vitorias+1)/self.qtd_apostado,4)) )
             self.patrimonio += premios[len(n_acertei)] # Chuto valor
+            self.qtd_vitorias += 1
          else:
             self.patrimonio -= VALOR_APOSTA # Um bilhete
          #print("ap=", aposta, ", qtd=", n_acertei)
+         self.somaStack += VALOR_APOSTA
          #return True
       self.idade += 1 # Conta essa
       for numero in numeros: 
          if (numero not in self.freq_numeros ): self.freq_numeros[numero] = 0
          self.freq_numeros[numero] += 1
+      if( self.somaStack != 0 ): self.lucro_medio = 1.0*(self.patrimonio-self.PAT_INICIAL)/self.somaStack
       return False
       
    def __str__ (self):
