@@ -36,6 +36,36 @@ class MeioAmbiente():
          desc += melhorAgente + "#"
          lista_agentes = [agente for agente in lista_agentes if agente.lucro_medio != melhor_retorno]
       return desc
+
+# Basicamente apostar os anteriores
+class AgenteApostadorAnterior():
+   def __init__(self):
+      self.iniciaMindset()
+      
+   def iniciaMindset(self):
+      self.nome = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))   # Uma cadeia de letras e numeros de tamanho 10
+      self.PAT_INICIAL = 5000.0
+      self.patrimonio = self.PAT_INICIAL   # Mil doletas
+      self.idade = 0 # Um bebezito
+      self.anterior = [] # Numero anterior
+      
+   def estouVivo(self):
+      if( self.patrimonio <= 0 ): return False
+      return True   
+      
+   def decide(self, numeros):
+      VALOR_APOSTA = 4.50
+      PREMIO_SENA = 3000000 
+      PREMIO_QUINA = PREMIO_SENA/100
+      PREMIO_QUADRA = 5000 #PREMIO_QUINA / 50
+      premios = {6 : PREMIO_SENA, 5 : PREMIO_QUINA, 4 : PREMIO_QUADRA,  }
+      n_acertei = [x for x in sorteioMegaSena for y in anterior if x==y]
+      #if( sorted(sorteioMegaSena) == sorted(self.anterior) ):
+      if( len(n_acertei) >=4 ):
+         print("Ganhou! Com idade=", self.idade, ", saldo=", self.patrimonio, ", acertei=", n_acertei)
+         self.patrimonio += premios[len(n_acertei)] # Chuto valor
+      else:
+         self.patrimonio -= VALOR_APOSTA # Um bilhete
       
 class AgenteApostadorMegaSena():
    def __init__(self):
