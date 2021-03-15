@@ -13,7 +13,7 @@ taxa_invest = 0.05 #sobre o capital investido
 n_popu = 500 # Quantos terao ao mesmo tempo
 dias_max = 500 # Maximo dias
 n_sim = 1000
-estrategias = [{'idade' : 0, 'max_dias' : randrange(1,dias_max), 'saldo' : capital, 'capital' : capital} for q_r in range(n_popu) ]
+estrategias = [{'idade' : 0, 'max_dias' : randrange(1,dias_max), 'saldo' : capital*(1-taxa_invest), 'capital' : capital} for q_r in range(n_popu) ]
 for n in range(1, n_sim):
    for e in estrategias:
       if(n % e['max_dias'] == 0): # Hora de sacar
